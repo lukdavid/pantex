@@ -1,10 +1,11 @@
 import { RequestHandler } from "express";
 import { UploadedFile } from "express-fileupload";
-import { WORK_DIR } from "../const";
 import process from "process";
 import { runPandoc } from "./utils/pandoc";
+import { execAsync } from "./utils/exec";
+import shortid from "shortid";
 
-const pandoc: RequestHandler = (req, res) => {
+const pandoc: RequestHandler = async (req, res) => {
   const { outputFormat } = req.body;
   if (!outputFormat) {
     res.status(400);
@@ -17,21 +18,23 @@ const pandoc: RequestHandler = (req, res) => {
     const k = Object.keys(req.files)[0];
     const file = req.files[k] as UploadedFile;
 
-    const inputPath = `${WORK_DIR}/${file.name}`;
-    const outputPath = `${WORK_DIR}/${file.name.replace(/\.md$/, ".docx")}`;
-    file.mv(inputPath);
-    console.log(`converting ${inputPath} to ${outputPath}`);
+    const inputFormat = file.name.split(".").pop();
+    const fileName = `main-${shortid.generate()}`;
+    const inputFile = `${fileName}.${inputFormat}`;
+    await file.mv(`./${inputFile}`);
+    const outputFile = `${fileName}.${outputFormat}`;
 
-    runPandoc(inputPath, outputPath)
+    runPandoc(inputFile, outputFile)
       .then(({ stdout, stderr }) => {
         console.log(stdout);
-        res.sendFile(outputPath, { root: process.cwd() });
+        res.sendFile(outputFile, { root: process.cwd() });
       })
       .catch((error) => {
         console.error("Error running pandoc", error);
         res.status(500);
         res.send(error);
-      });
+      })
+      .finally(() => execAsync(`rm ${fileName}*`));
   }
 };
 
