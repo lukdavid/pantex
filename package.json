@@ -4,7 +4,8 @@
   "description": "A dockerized express.js server for document conversions using pandoc and latex",
   "main": "index.ts",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "type-check": "tsc --noEmit --project tsconfig.json"
   },
   "keywords": [
     "pandoc",
