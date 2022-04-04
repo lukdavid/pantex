@@ -1,17 +1,20 @@
 import { RequestHandler } from "express";
 import { UploadedFile } from "express-fileupload";
 import process from "process";
-import { runPandoc } from "./utils/pandoc";
-import { execAsync } from "./utils/exec";
+import { runPandoc } from "./writers/pandoc";
+import { execAsync } from "./writers/exec";
 import shortid from "shortid";
 
 const pandoc: RequestHandler = async (req, res) => {
   const { outputFormat } = req.body;
   if (!outputFormat) {
     res.status(400);
-    res.send("Must specify outputFormat (file extension) eg docx, html, md");
-  }
-  if (!req.files || Object.keys(req.files).length !== 1) {
+    res.send({
+      code: "RequiredField",
+      message: "Cannot be empty",
+      property: "outputFormat",
+    });
+  } else if (!req.files || Object.keys(req.files).length !== 1) {
     res.status(400);
     res.send("One file must be provided to run pandoc");
   } else {
