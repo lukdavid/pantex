@@ -2,8 +2,8 @@ import { RequestHandler } from "express";
 import { UploadedFile } from "express-fileupload";
 import process from "process";
 import { runPandoc } from "./writers/pandoc";
-import { execAsync } from "./writers/exec";
 import shortid from "shortid";
+import { execAsync } from "./writers/exec";
 
 const pandoc: RequestHandler = async (req, res) => {
   const { outputFormat } = req.body;
@@ -29,15 +29,24 @@ const pandoc: RequestHandler = async (req, res) => {
 
     runPandoc(inputFile, outputFile)
       .then(({ stdout, stderr }) => {
-        console.log(stdout);
-        res.sendFile(outputFile, { root: process.cwd() });
+        console.log(stdout, stderr);
+        res.sendFile(outputFile, { root: `${process.cwd()}` }, (error) => {
+          if (error) {
+            console.error("Error sending file", error);
+            res.status(500);
+            res.send(error);
+          } else {
+            console.log(`Sent ${outputFile}`);
+          }
+          execAsync(`rm ${fileName}*`);
+        });
       })
       .catch((error) => {
         console.error("Error running pandoc", error);
         res.status(500);
         res.send(error);
-      })
-      .finally(() => execAsync(`rm ${fileName}*`));
+        execAsync(`rm ${fileName}*`);
+      });
   }
 };
 

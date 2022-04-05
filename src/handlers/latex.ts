@@ -14,10 +14,21 @@ const latex: RequestHandler = async (req, res) => {
     });
   }
 
-  const pdfFile = await writeAndCompileLatex(content);
-
-  res.sendFile(pdfFile, { root: process.cwd() });
-  execAsync(`rm ${pdfFile}`); // cleanup
+  writeAndCompileLatex(content)
+    .then((pdfFile) => {
+      res.sendFile(pdfFile, { root: `${process.cwd()}` }, (error) => {
+        if (error) {
+          console.error(error);
+          res.status(500);
+          res.send(`error sending pdf, ${error}`);
+        }
+        execAsync(`rm ${pdfFile}`); // cleanup
+      });
+    })
+    .catch((error) => {
+      res.status(500);
+      res.send(`error compiling Latex, ${error}`);
+    });
 };
 
 export default latex;
