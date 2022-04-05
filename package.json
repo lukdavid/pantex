@@ -2,8 +2,10 @@
   "name": "pantex",
   "version": "1.0.0",
   "description": "A dockerized express.js server for document conversions using pandoc and latex",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint **/*.ts",
     "test": "test",
     "type-check": "tsc --noEmit --project tsconfig.json"
   },

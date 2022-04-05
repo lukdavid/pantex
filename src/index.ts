@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(fileUpload());
-const port = 3000;
+const port = 8080;
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -22,5 +22,5 @@ app.post("/html2pdf", htmlToPdf);
 
 // app.use(router);
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });

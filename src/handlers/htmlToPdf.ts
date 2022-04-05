@@ -26,18 +26,26 @@ const htmlToPdf: RequestHandler = async (req, res) => {
   // preprocess
   await preprocessTex(`${fileName}.tex`, "basic");
   // compile and return
-  try {
-    const pdfFile = await compileLatex(`${fileName}`);
-    res.sendFile(pdfFile, { root: process.cwd() });
-  } catch (error) {
-    console.error(`Error compiling latex`, error);
-    res.status(500);
-    res.send({
-      message: `Error compiling latex, ${error}`,
-      file: readFileSync(`${fileName}.tex`).toString(),
+  compileLatex(fileName)
+    .then((pdfFile) => {
+      res.sendFile(pdfFile, { root: process.cwd() }, (error) => {
+        if (error) {
+          console.error(error);
+          res.status(500);
+          res.send(`Error sending pdf ${error}`);
+        }
+        execAsync(`rm ${fileName}*`);
+      });
+    })
+    .catch((error) => {
+      console.error(`Error compiling latex`, error);
+      res.status(500);
+      res.send({
+        message: `Error compiling latex, ${error}`,
+        file: readFileSync(`${fileName}.tex`).toString(),
+      });
+      execAsync(`rm ${fileName}*`);
     });
-  }
-  execAsync(`rm ${fileName}*`);
 };
 
 export default htmlToPdf;
