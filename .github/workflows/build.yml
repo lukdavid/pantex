@@ -30,8 +30,7 @@ jobs:
       - name: install pandoc and latex
         run: |
           sudo apt-get update
-          wget https://github.com/jgm/pandoc/releases/download/$pandoc_ver/pandoc-$pandoc_ver-1-arm64.deb -O pandoc.deb
-          dpkg -i pandoc.deb && rm pandoc.deb 
+          sudo apt-get install pandoc
           sudo apt-get install texlive-latex-extra -y
       - name: Run unit tests
         run: npm test

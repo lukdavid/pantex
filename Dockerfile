@@ -6,7 +6,8 @@ ENV pandoc_ver=2.17.1.1
 RUN apt-get -qq -y update 
 
 # Download the specified version of pandoc and install it
-RUN apt-get install pandoc
+RUN wget https://github.com/jgm/pandoc/releases/download/$pandoc_ver/pandoc-$pandoc_ver-1-arm64.deb -O pandoc.deb
+RUN dpkg -i pandoc.deb && rm pandoc.deb 
 
 RUN  apt-get install texlive-latex-extra -y
 
