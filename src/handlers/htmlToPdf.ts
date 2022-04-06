@@ -9,7 +9,10 @@ import process from "process";
 import { execAsync } from "./writers/exec";
 
 const htmlToPdf: RequestHandler = async (req, res) => {
-  const { content: htmlContent } = req.body;
+  const { content: htmlContent, templateId } = req.body as {
+    content?: string;
+    templateId?: string;
+  };
   if (!htmlContent || typeof htmlContent !== "string") {
     res.status(400);
     res.send({
@@ -17,6 +20,7 @@ const htmlToPdf: RequestHandler = async (req, res) => {
       message: "Cannot be empty",
       property: "content",
     });
+    return;
   }
   // write html file
   const fileName = `main-${shortid.generate()}`;
@@ -24,7 +28,7 @@ const htmlToPdf: RequestHandler = async (req, res) => {
   // convert to tex
   await runPandoc(`${fileName}.html`, `${fileName}.tex`);
   // preprocess
-  await preprocessTex(`${fileName}.tex`, "basic");
+  await preprocessTex(`${fileName}.tex`, templateId || "basic");
   // compile and return
   compileLatex(fileName)
     .then((pdfFile) => {
