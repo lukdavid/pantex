@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b",
     "lint": "eslint **/*.ts",
-    "test": "test",
+    "test": "jest",
     "type-check": "tsc --noEmit --project tsconfig.json"
   },
   "keywords": [
@@ -25,17 +25,23 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/express-fileupload": "^1.2.2",
+    "@types/jest": "^27.4.1",
     "@types/mustache": "^4.1.2",
     "@types/node": "^17.0.23",
     "@types/shortid": "^0.0.29",
+    "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2",
+    "ts-jest": "^27.1.4",
     "typescript": "^4.6.3"
   }
 }
