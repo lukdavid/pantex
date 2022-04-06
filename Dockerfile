@@ -13,8 +13,8 @@ RUN  apt-get install texlive-latex-extra -y
 
 # Test Latex
 COPY examples/small2e.tex small2e.tex
-RUN latex  small2e.tex
-RUN pdflatex  small2e.tex
+RUN latex small2e.tex
+RUN pdflatex small2e.tex
 
 
 # Create app directory

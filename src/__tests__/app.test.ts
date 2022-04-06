@@ -1,6 +1,6 @@
 import supertest from "supertest";
 import app from "../app";
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync } from "fs";
 
 describe("Ping", () => {
   it("should respond hello to ping", async () => {
@@ -38,21 +38,6 @@ describe("Latex", () => {
       .send({ content: corruptedContent })
       .expect(500);
   });
-  it("should delete all source and build files", async () => {
-    await supertest(app)
-      .post("/latex")
-      .send({ content })
-      .then(() => {
-        const ls = readdirSync(".")
-          .filter((fileName) => /^main-/.test(fileName))
-          .filter((fileName) => !/.pdf$/.test(fileName));
-        expect(ls.length).toBe(0);
-      });
-  });
-  it("should note have dangling pdf files", () => {
-    const pdfs = readdirSync(".").filter((fileName) => /.pdf$/.test(fileName));
-    expect(pdfs.length).toBe(0);
-  });
 });
 
 describe("Pandoc", () => {
@@ -71,7 +56,7 @@ describe("Pandoc", () => {
       .then((response) => {
         const { headers, text } = response;
         expect(headers["content-type"]).toMatch(/^text\/markdown/);
-        expect(text).toMatch(/^#/);
+        expect(/\*\*test 1234\*\*/.test(text)).toBeTruthy();
       });
   });
 });
