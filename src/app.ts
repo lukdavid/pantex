@@ -9,8 +9,8 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(fileUpload());
 
-app.get("/ping", (req, res) => {
-  res.send("Hello World!");
+app.get("/health", (req, res) => {
+  res.send("OK");
 });
 
 app.post("/pandoc", pandoc);
