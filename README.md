@@ -18,3 +18,10 @@ or build and run :
 npm run build
 npm start
 ```
+
+## Docker
+
+```sh
+docker build -t . pantex
+docker run --rm -it -p 5001:5001/tcp pantex:latest
+```
