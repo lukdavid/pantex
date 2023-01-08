@@ -22,12 +22,9 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+RUN npm ci 
 
 COPY . .
 
@@ -35,11 +32,6 @@ RUN npm run build
 
 COPY templates /usr/src/app/dist/templates
 
-WORKDIR /usr/src/app/dist
+EXPOSE 5001
 
-RUN ls
-RUN ls src/
-
-EXPOSE 8080
-
-CMD [ "node", "src/index.js" ]
+CMD [ "npm", "start" ]

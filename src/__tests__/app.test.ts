@@ -5,10 +5,10 @@ import { readFileSync } from "fs";
 describe("Ping", () => {
   it("should respond hello to ping", async () => {
     await supertest(app)
-      .get("/ping")
+      .get("/health")
       .expect(200)
       .then((res) => {
-        expect(res.text).toBe("Hello World!");
+        expect(res.text).toBe("OK");
       });
   });
   it("Should return 404 for invalid route", async () => {
